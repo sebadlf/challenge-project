@@ -1,0 +1,23 @@
+.AutoComplete-Item {
+    display: flex;
+}
+
+.AutoComplete-CheckboxContainer {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+.AutoComplete-LabelContainer {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.AutoComplete-Label {
+    font-weight: bold;
+}
+
+.AutoComplete-SubLabel {
+    font-size: 0.8rem;
+}
