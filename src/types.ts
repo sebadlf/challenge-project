@@ -1,5 +1,5 @@
 export type ApiResponse = {
-	data: CityInfo[];
+	data: CityInfoResponse[];
 	total: number;
 	links: {
 		first: string;
@@ -10,7 +10,7 @@ export type ApiResponse = {
 	filter?: string;
 };
 
-export type CityInfo = {
+export type CityInfoResponse = {
 	geonameid: number;
 	name: string;
 	country: string;

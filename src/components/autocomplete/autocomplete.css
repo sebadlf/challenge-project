@@ -21,3 +21,9 @@
 .AutoComplete-SubLabel {
     font-size: 0.8rem;
 }
+
+.AutoComplete-Highlight {
+    font-weight: bold;
+    background: none;
+    padding: 0;
+}

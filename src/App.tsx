@@ -1,32 +1,30 @@
 import React, { useState } from 'react';
 import { Layout } from 'antd';
 
-import useAxios from 'axios-hooks';
-
 import './App.css';
 import AutoComplete from './components/autocomplete/autocomplete';
+import CityInfo from './components/city-info/city-info';
 
 import 'antd/dist/antd.css';
-import { ApiResponse } from './types';
+import useFilteredCities from './hooks/use-filtered-cities';
+import usePreferredCities from './hooks/use-preferred-cities';
+
+import { getCitiesOptions } from './utils/utils';
 
 const { Header, Content, Footer } = Layout;
 
 function App() {
-	const [result, refetch] = useAxios<ApiResponse, string>('http://localhost:3030/cities');
+	const [filter, setFilter] = useState<string>('');
 
-	const { data, loading, error } = result;
+	const { cities, loading } = useFilteredCities(filter);
 
-	const cities = data?.data ?? [];
+	const { preferredCities, updatePreferredCities } = usePreferredCities();
 
-	const options = cities.slice(0, 5).map((c) => ({
-		value: c.geonameid,
-		label: c.name,
-		subLabel: c.subcountry ? `${c.subcountry} - ${c.country}` : c.country,
-	}));
+	console.log(preferredCities);
 
-	console.log(options);
-
-	const [value, setValue] = useState<number[]>([]);
+	const onChangeHandler = async (newValue: number[]) => {
+		await updatePreferredCities(preferredCities, newValue);
+	};
 
 	return (
 		<div className="App">
@@ -36,8 +34,17 @@ function App() {
 				</Header>
 				<Content style={{ padding: '2rem' }}>
 					<div className="site-layout-content">
-						<AutoComplete options={options} value={value} onChange={setValue} />
-						<div>{value}</div>
+						{preferredCities.map((v) => (
+							<CityInfo key={v} cityId={v} />
+						))}
+						<AutoComplete
+							options={getCitiesOptions(cities)}
+							value={preferredCities}
+							loading={loading}
+							onChange={onChangeHandler}
+							onSearch={setFilter}
+							placeholder="Type to filter by city or country"
+						/>
 					</div>
 				</Content>
 				<Footer style={{ textAlign: 'center' }}>Code Challenge - Sebastián de la Fuente</Footer>
