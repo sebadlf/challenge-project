@@ -43,13 +43,13 @@ function App(): React.ReactElement {
 
 							{updatePreferredCitiesError && <ErrorMessage message="Unable to update city list" />}
 
-							{preferredCities && preferredCities.length
-								? preferredCities
-										.map<React.ReactNode>((v) => <CityInfo key={v} cityId={v} />)
-										.reduce((prev, curr) =>
-											prev ? [prev, <div>&nbsp;-&nbsp;</div>, curr] : [curr]
-										)
-								: null}
+							{preferredCities && preferredCities.length ? (
+								preferredCities
+									.map<React.ReactNode>((v) => <CityInfo key={v} cityId={v} />)
+									.reduce((prev, curr) => (prev ? [prev, <div>&nbsp;-&nbsp;</div>, curr] : [curr]))
+							) : (
+								<div>Select your favority cities</div>
+							)}
 						</div>
 
 						{citiesError && <ErrorMessage message="Unable to load city list" />}
