@@ -22,7 +22,14 @@ interface AutoCompleteProps {
 	placeholder: string;
 }
 
-const AutocompleteView = ({ options, value, loading, onChange, onSearch, placeholder }: AutoCompleteProps) => {
+const AutocompleteView = ({
+	options,
+	value,
+	loading,
+	onChange,
+	onSearch,
+	placeholder,
+}: AutoCompleteProps): React.ReactElement => {
 	const [localValue, setLocalValue] = useState('');
 
 	const renderOptions = (localOptions: AutoCompleteOption[]) =>

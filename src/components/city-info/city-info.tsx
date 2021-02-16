@@ -1,11 +1,12 @@
 import React from 'react';
 import useCityInfo from '../../hooks/use-city-info';
+import ErrorMessage from '../error-message/error-message';
 
 interface CityInfoProps {
 	cityId: number;
 }
 
-const CityInfo = ({ cityId }: CityInfoProps) => {
+const CityInfo = ({ cityId }: CityInfoProps): React.ReactElement => {
 	const { city, loading, error } = useCityInfo(cityId);
 
 	if (loading) {
@@ -13,7 +14,7 @@ const CityInfo = ({ cityId }: CityInfoProps) => {
 	}
 
 	if (error) {
-		return <div>Unable to load city info</div>;
+		return <ErrorMessage message="Unable to load city info" />;
 	}
 
 	return (

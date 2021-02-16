@@ -10,17 +10,21 @@ import useFilteredCities from './hooks/use-filtered-cities';
 import usePreferredCities from './hooks/use-preferred-cities';
 
 import { getCitiesOptions } from './utils/utils';
+import ErrorMessage from './components/error-message/error-message';
 
 const { Header, Content, Footer } = Layout;
 
-function App() {
+function App(): React.ReactElement {
 	const [filter, setFilter] = useState<string>('');
 
-	const { cities, loading } = useFilteredCities(filter);
+	const { cities, citiesError, citiesLoading } = useFilteredCities(filter);
 
-	const { preferredCities, updatePreferredCities } = usePreferredCities();
-
-	console.log(preferredCities);
+	const {
+		preferredCities,
+		preferredCitiesError,
+		updatePreferredCities,
+		updatePreferredCitiesError,
+	} = usePreferredCities();
 
 	const onChangeHandler = async (newValue: number[]) => {
 		await updatePreferredCities(preferredCities, newValue);
@@ -34,13 +38,26 @@ function App() {
 				</Header>
 				<Content style={{ padding: '2rem' }}>
 					<div className="site-layout-content">
-						{preferredCities.map((v) => (
-							<CityInfo key={v} cityId={v} />
-						))}
+						<div className="App-PreferredCities">
+							{preferredCitiesError && <ErrorMessage message="Unable to load city list" />}
+
+							{updatePreferredCitiesError && <ErrorMessage message="Unable to update city list" />}
+
+							{preferredCities && preferredCities.length
+								? preferredCities
+										.map<React.ReactNode>((v) => <CityInfo key={v} cityId={v} />)
+										.reduce((prev, curr) =>
+											prev ? [prev, <div>&nbsp;-&nbsp;</div>, curr] : [curr]
+										)
+								: null}
+						</div>
+
+						{citiesError && <ErrorMessage message="Unable to load city list" />}
+
 						<AutoComplete
 							options={getCitiesOptions(cities)}
 							value={preferredCities}
-							loading={loading}
+							loading={citiesLoading}
 							onChange={onChangeHandler}
 							onSearch={setFilter}
 							placeholder="Type to filter by city or country"

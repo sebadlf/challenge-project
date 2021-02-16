@@ -1,4 +1,5 @@
 import useAxios from 'axios-hooks';
+import { useEffect } from 'react';
 import { BASE_URL } from '../constants';
 import { PreferredCitiesResponse } from '../types';
 
@@ -9,14 +10,20 @@ const usePreferredCities = () => {
 
     const {data: preferredCities, error: preferredCitiesError, loading: preferredCitiesLoading} = preferredCitiesResponse;
 
-    // eslint-disable-next-line
-	const [{ data: patchData, loading: patchLoading, error: patchError }, executePatch] = useAxios(
+	const [{ loading: updatePreferredCitiesLoading, error: updatePreferredCitiesError }, executePatch] = useAxios(
 		{
 			url: `${BASE_URL}/preferences/cities`,
 			method: 'PATCH',
 		},
 		{ manual: true }
 	);
+
+    useEffect(() => {
+        if (preferredCitiesError){
+            // eslint-disable-next-line
+            preferredCitiesRefetch()
+        }
+    }, [preferredCitiesError, preferredCitiesRefetch])       
 
     const updatePreferredCities = async (oldSelection: number[], newSelection: number[]) => {
 		
@@ -44,9 +51,8 @@ const usePreferredCities = () => {
         preferredCities: preferredCities?.data ?? [],
         preferredCitiesError,
         preferredCitiesLoading,
-        patchData, // eslint-disable-line
-        patchLoading,
-        patchError,
+        updatePreferredCitiesLoading,
+        updatePreferredCitiesError,
         updatePreferredCities
     }
 }
